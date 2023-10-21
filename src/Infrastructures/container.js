@@ -17,6 +17,8 @@ const ThreadRepository = require('../Domains/thread/ThreadRepository')
 const ThreadRepositoryPostgres = require('./repository/ThreadRepositoryPostgres')
 const CommentsRepository = require('../Domains/comments/CommentsRepository')
 const CommentsRepositoryPostgres = require('./repository/CommentsRepositoryPostgres')
+const RepliesRepository = require('../Domains/replies/RepliesRepository')
+const RepliesRepositoryPostgres = require('./repository/RepliesRepositoryPostgres')
 
 // use case
 const AddUserUseCase = require('../Applications/use_case/AddUserUseCase')
@@ -29,6 +31,7 @@ const LogoutUserUseCase = require('../Applications/use_case/LogoutUserUseCase')
 const RefreshAuthenticationUseCase = require('../Applications/use_case/RefreshAuthenticationUseCase')
 const ThreadUseCase = require('../Applications/use_case/ThreadUseCase')
 const CommentUseCase = require('../Applications/use_case/CommentUseCase')
+const RepliesUseCase = require('../Applications/use_case/RepliesUseCase')
 
 // creating container
 const container = createContainer()
@@ -99,6 +102,20 @@ container.register([
   {
     key: CommentsRepository.name,
     Class: CommentsRepositoryPostgres,
+    parameter: {
+      dependencies: [
+        {
+          concrete: pool
+        },
+        {
+          concrete: nanoid
+        }
+      ]
+    }
+  },
+  {
+    key: RepliesRepository.name,
+    Class: RepliesRepositoryPostgres,
     parameter: {
       dependencies: [
         {
@@ -195,6 +212,14 @@ container.register([
         {
           name: 'threadRepository',
           internal: ThreadRepository.name
+        },
+        {
+          name: 'commentsRepository',
+          internal: CommentsRepository.name
+        },
+        {
+          name: 'repliesRepository',
+          internal: RepliesRepository.name
         }
       ]
     }
@@ -212,6 +237,27 @@ container.register([
         {
           name: 'threadRepository',
           internal: ThreadRepository.name
+        }
+      ]
+    }
+  },
+  {
+    key: RepliesUseCase.name,
+    Class: RepliesUseCase,
+    parameter: {
+      injectType: 'destructuring',
+      dependencies: [
+        {
+          name: 'repliesRepository',
+          internal: RepliesRepository.name
+        },
+        {
+          name: 'threadRepository',
+          internal: ThreadRepository.name
+        },
+        {
+          name: 'commentsRepository',
+          internal: CommentsRepository.name
         }
       ]
     }

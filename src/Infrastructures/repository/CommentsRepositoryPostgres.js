@@ -1,4 +1,3 @@
-// const InvariantError = require('../../Commons/exceptions/InvariantError')
 const AuthorizationError = require('../../Commons/exceptions/AuthorizationError')
 const NotFoundError = require('../../Commons/exceptions/NotFoundError')
 const CommentsRepository = require('../../Domains/comments/CommentsRepository')
@@ -53,6 +52,33 @@ class CommentsRepositoryPostgres extends CommentsRepository {
 
     if (comment.owner !== userId) {
       throw new AuthorizationError('Anda tidak berhak mengakses komentar ini')
+    }
+  }
+
+  async getCommentsByThreadId (threadId) {
+    const query = {
+      text: `SELECT cm.id, usr.username, cm.date, cm.content,cm.is_deleted
+      FROM comments cm
+      JOIN users usr ON cm.owner = usr.id
+      WHERE cm.thread_id = $1
+      ORDER BY cm.date ASC`,
+      values: [threadId]
+    }
+
+    const result = await this._pool.query(query)
+    return result.rows
+  }
+
+  async verifyCommentExistById (commentId) {
+    const query = {
+      text: 'SELECT * FROM comments WHERE id = $1',
+      values: [commentId]
+    }
+
+    const result = await this._pool.query(query)
+
+    if (!result.rowCount) {
+      throw new NotFoundError('Komentar tidak ditemukan')
     }
   }
 }

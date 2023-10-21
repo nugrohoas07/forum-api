@@ -21,6 +21,8 @@ exports.up = (pgm) => {
       notNull: true
     }
   })
+  // FK owner ref from users.id
+  pgm.addConstraint('threads', 'fk_threads.owner_users.id', 'FOREIGN KEY(owner) REFERENCES users(id) ON DELETE CASCADE')
 }
 
 exports.down = (pgm) => {
