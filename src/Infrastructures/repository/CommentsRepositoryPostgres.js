@@ -45,7 +45,7 @@ class CommentsRepositoryPostgres extends CommentsRepository {
     const result = await this._pool.query(query)
 
     if (!result.rowCount) {
-      throw new NotFoundError('Gagal menghapus, komentar tidak ditemukan')
+      throw new NotFoundError('Komentar tidak ditemukan')
     }
 
     const comment = result.rows[0]

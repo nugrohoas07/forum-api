@@ -1,14 +1,12 @@
-const NewReplies = require('../NewReplies')
+const NewComment = require('../NewComment')
 
-describe('a NewReplies entities', () => {
+describe('a NewComment entities', () => {
   it('should throw error when payload did not contain needed property', () => {
     // Arrange
-    const payload = {
-      mobil: 'tes'
-    }
+    const payload = {}
 
     // Action and Assert
-    expect(() => new NewReplies(payload)).toThrowError('NEW_REPLIES.NOT_CONTAIN_NEEDED_PROPERTY')
+    expect(() => new NewComment(payload)).toThrowError('NEW_COMMENT.NOT_CONTAIN_NEEDED_PROPERTY')
   })
 
   it('should throw error when payload did not meet data type specification', () => {
@@ -18,17 +16,17 @@ describe('a NewReplies entities', () => {
     }
 
     // Action and Assert
-    expect(() => new NewReplies(payload)).toThrowError('NEW_REPLIES.NOT_MEET_DATA_TYPE_SPECIFICATION')
+    expect(() => new NewComment(payload)).toThrowError('NEW_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION')
   })
 
-  it('should create NewReplies object correctly', () => {
+  it('should create NewComment object correctly', () => {
     // Arrange
     const payload = {
       content: 'ini komentar'
     }
 
     // Action
-    const { content } = new NewReplies(payload)
+    const { content } = new NewComment(payload)
 
     // Assert
     expect(content).toEqual(payload.content)
